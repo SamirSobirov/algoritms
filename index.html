@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .s1 {
+            font-family: Tahoma;
+            font-size: 18pt;
+        }
+    </style>
+    <script>
+        let postfixExpression
+        function infixToPostfix(infixExpression) {
+            // Реализация алгоритма преобразования инфиксного выражения в постфиксное
+            // (ваш предыдущий код)
+
+            // Вернуть постфиксное выражение
+            return postfixExpression;
+        }
+
+        function g() {
+            const infixExpression = document.getElementsByName('txt1')[0].value;
+            const postfixExpression = infixToPostfix(infixExpression);
+            document.getElementsByName('txt2')[0].value = postfixExpression;
+        }
+
+        function fcl() {
+            document.getElementsByName('txt1')[0].value = '';
+            document.getElementsByName('txt2')[0].value = '';
+        }
+
+        function f() {
+            const exampleIndex = document.getElementsByName('sel1')[0].selectedIndex;
+            const examples = ["a*b+c", "(a+b)*(c+d)", "a^b*c-d+e/f/(g+h)"];
+            document.getElementsByName('txt1')[0].value = examples[exampleIndex];
+        }
+    </script>
+</head>
+<body>
+    <div class="s1">
+        <hr size="4"><b>Преобразование инфиксного выражения в постфиксное</b>
+        <hr>
+        <br>Инфиксное выражение: <input type="text" value="a*b+c" size="20" name="txt1" class="s1" onchange="fcl()">
+        <input type="button" value="Пример" name="but2" onclick="f()" class="s1">
+        <select name="sel1" class="s1">
+            <option value="a*b+c">1. a*b+c</option>
+            <option value="(a+b)*(c+d)">2. (a+b)*(c+d)</option>
+            <option value="a^b*c-d+e/f/(g+h)">3. a^b*c-d+e/f/(g+h)</option>
+        </select>
+        <br><input type="button" value="преобразовать в" name="but1" onclick="g()" class="s1">
+        &nbsp;постфиксное выражение: <input type="text" value="" size="20" name="txt2" class="s1">
+        <input type="button" value="Очистить" name="but3" onclick="fcl()" class="s1">
+        <p></p>
+        <div id="info"></div>
+    </div>
+</body>
+</html>
