@@ -62,59 +62,48 @@
     }
 
     function convertToPostfix() {
-        // Реализация преобразования инфиксного выражения в постфиксное
         let infixExpression = document.querySelector('input[name="txt1"]').value;
-        let postfixExpression = ""; // Результат преобразования
-
-        // Ваш код для преобразования
+        let postfixExpression = infixToPostfix(infixExpression); 
 
         document.querySelector('input[name="txt2"]').value = postfixExpression;
     }
 
+    function infixToPostfix(infix) {
+        const precedence = {
+            '^': 3,
+            '*': 2,
+            '/': 2,
+            '+': 1,
+            '-': 1,
+        };
 
-    function convertToPostfix() {
-    let infixExpression = document.querySelector('input[name="txt1"]').value;
-    let postfixExpression = infixToPostfix(infixExpression); // Call the function that converts infix to postfix
+        let output = '';
+        let stack = [];
 
-    document.querySelector('input[name="txt2"]').value = postfixExpression;
-}
-
-function infixToPostfix(infix) {
-    const precedence = {
-        '^': 3,
-        '*': 2,
-        '/': 2,
-        '+': 1,
-        '-': 1,
-    };
-
-    let output = '';
-    let stack = [];
-
-    infix.split('').forEach(token => {
-        if (/[a-zA-Z]/.test(token)) {
-            output += token;
-        } else if (token === '(') {
-            stack.push(token);
-        } else if (token === ')') {
-            while (stack.length && stack[stack.length - 1] !== '(') {
-                output += stack.pop();
+        infix.split('').forEach(token => {
+            if (/[a-zA-Z]/.test(token)) {
+                output += token;
+            } else if (token === '(') {
+                stack.push(token);
+            } else if (token === ')') {
+                while (stack.length && stack[stack.length - 1] !== '(') {
+                    output += stack.pop();
+                }
+                stack.pop();
+            } else {
+                while (stack.length && precedence[token] <= precedence[stack[stack.length - 1]]) {
+                    output += stack.pop();
+                }
+                stack.push(token);
             }
-            stack.pop();
-        } else {
-            while (stack.length && precedence[token] <= precedence[stack[stack.length - 1]]) {
-                output += stack.pop();
-            }
-            stack.push(token);
+        });
+
+        while (stack.length) {
+            output += stack.pop();
         }
-    });
 
-    while (stack.length) {
-        output += stack.pop();
+        return output;
     }
-
-    return output;
-}
 </script>
 </body>
 </html>
