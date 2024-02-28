@@ -1,109 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Преобразование инфиксного выражения в постфиксное</title>
-<style>
-    body {
-        background-color:blanchedalmond;
-    }
-
-    .container {
-        font-family: Tahoma;
-        font-size: 18pt;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    input {
-        margin-top: 10px;
-        
-    }
-
-
-</style>
-</head>
-<body>
-<div class="container">
-    <hr size="4"><b>Преобразование инфиксного выражения в постфиксное</b>
-    
-    <hr>
-    
-    <select name="sel1" class="container">
-        <option value="a*b+c">1. a*b+c</option>
-        <option value="(a+b)*(c+d)">2. (a+b)*(c+d)</option>
-        <option value="a^b*c-d+e/f/(g+h)">3. a^b*c-d+e/f/(g+h)</option>
-
-        
-    </select>
-    <input type="button" value="Пример" name="but2" onclick="fillExample()" class="container">
-
-    
-
-    <br>Инфиксное выражение: <input type="text" value="a*b+c" size="20" name="txt1" class="container" onchange="convertToPostfix()">
-   
-    <br><input type="button" value="преобразовать  в" name="but1" onclick="convertToPostfix()" class="container">
-    &nbsp;постфиксное выражение: <input type="text" value="" size="20" name="txt2" class="container">
-    <input type="button" value="Очистить" name="but3" onclick="clearFields()" class="container">
-    <p></p>
-    <div id="info"></div>
-</div>
-
-<script>
-    function fillExample() {
-        document.querySelector('input[name="txt1"]').value = document.querySelector('select[name="sel1"]').value;
-    }
-
-    function clearFields() {
-        document.querySelector('input[name="txt1"]').value = "";
-        document.querySelector('input[name="txt2"]').value = "";
-    }
-
-    function convertToPostfix() {
-        let infixExpression = document.querySelector('input[name="txt1"]').value;
-        let postfixExpression = infixToPostfix(infixExpression); 
-
-        document.querySelector('input[name="txt2"]').value = postfixExpression;
-    }
-
-    function infixToPostfix(infix) {
-        const precedence = {
-            '^': 3,
-            '*': 2,
-            '/': 2,
-            '+': 1,
-            '-': 1,
-        };
-
-        let output = '';
-        let stack = [];
-
-        infix.split('').forEach(token => {
-            if (/[a-zA-Z]/.test(token)) {
-                output += token;
-            } else if (token === '(') {
-                stack.push(token);
-            } else if (token === ')') {
-                while (stack.length && stack[stack.length - 1] !== '(') {
-                    output += stack.pop();
-                }
-                stack.pop();
-            } else {
-                while (stack.length && precedence[token] <= precedence[stack[stack.length - 1]]) {
-                    output += stack.pop();
-                }
-                stack.push(token);
-            }
-        });
-
-        while (stack.length) {
-            output += stack.pop();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Преобразование инфиксного выражения в постфиксное</title>
+    <style>
+        body {
+            background-color: blanchedalmond;
         }
 
-        return output;
-    }
-</script>
+        .container {
+            font-family: Tahoma;
+            font-size: 18pt;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        input {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <hr size="4"><b>Преобразование инфиксного выражения в постфиксное</b>
+
+        <hr>
+
+        <select name="sel1" class="container">
+            <option value="a*b+c">1. a*b+c</option>
+            <option value="(a+b)*(c+d)">2. (a+b)*(c+d)</option>
+            <option value="a^b*c-d+e/f/(g+h)">3. a^b*c-d+e/f/(g+h)</option>
+        </select>
+        <input type="button" value="Пример" name="but2" onclick="fillExample()" class="container">
+
+        <br>Инфиксное выражение: <input type="text" value="a*b+c" size="20" name="txt1" class="container"
+            onchange="convertToPostfix()">
+
+        <br><input type="button" value="преобразовать  в" name="but1" onclick="convertToPostfix()" class="container">
+        &nbsp;постфиксное выражение: <input type="text" value="" size="20" name="txt2" class="container">
+
+        <br>Стек: <span id="stack"></span>
+
+        <input type="button" value="Очистить" name="but3" onclick="clearFields()" class="container">
+        <p></p>
+        <div id="info"></div>
+    </div>
+
+    <script>
+        function fillExample() {
+            document.querySelector('input[name="txt1"]').value = document.querySelector('select[name="sel1"]').value;
+        }
+
+        function clearFields() {
+            document.querySelector('input[name="txt1"]').value = "";
+            document.querySelector('input[name="txt2"]').value = "";
+            document.getElementById('stack').innerText = "";
+        }
+
+        function convertToPostfix() {
+            let infixExpression = document.querySelector('input[name="txt1"]').value;
+            let postfixExpression = infixToPostfix(infixExpression);
+
+            document.querySelector('input[name="txt2"]').value = postfixExpression;
+        }
+
+        function infixToPostfix(infix) {
+            const precedence = {
+                '^': 3,
+                '*': 2,
+                '/': 2,
+                '+': 1,
+                '-': 1,
+            };
+
+            let output = '';
+            let stack = [];
+
+            infix.split('').forEach(token => {
+                if (/[a-zA-Z]/.test(token)) {
+                    output += token;
+                } else if (token === '(') {
+                    stack.push(token);
+                } else if (token === ')') {
+                    while (stack.length && stack[stack.length - 1] !== '(') {
+                        output += stack.pop();
+                    }
+                    stack.pop();
+                } else {
+                    while (stack.length && precedence[token] <= precedence[stack[stack.length - 1]]) {
+                        output += stack.pop();
+                    }
+                    stack.push(token);
+                }
+
+                // Update the stack representation
+                document.getElementById('stack').innerText = stack.join(' ');
+            });
+
+            while (stack.length) {
+                output += stack.pop();
+            }
+
+            return output;
+        }
+    </script>
 </body>
+
 </html>
